@@ -80,16 +80,17 @@ class LlamaSummarize(DocSummarize):
         self.index = GPTSimpleVectorIndex.from_documents(
             self.docs, service_context=service_context)
 
-    def summarize(self):
-        summary = self.index.query(
-            """To summarise the paper, the summary needs to include these aspects: 
-                1. the background to the paper
-                2. the relevant research
-                3. the methods used
-                4. the result of the paper
-            Then list a few key points.
-            Finally give a few possible questions about the paper and provide answers.""",
-            response_mode="tree_summarize")
+    def summarize(self, prompt=None):
+        if prompt is None:
+            prompt = """To summarise the paper, the summary needs to include these aspects: 
+    1. the background to the paper
+    2. the relevant research
+    3. the methods used
+    4. the result of the paper
+Then list a few key points.
+Finally give a few possible questions about the paper and provide answers."""
+        summary = self.index.query(prompt,
+                                   response_mode="tree_summarize")
         return f"""Summary: {summary.response}"""
 
 
