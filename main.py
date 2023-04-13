@@ -19,5 +19,5 @@ if uploaded_file is not None:
     text = extract_text(bytesio)
 
 if st.button("Summarize"):
-    summarize = LlamaSummarize(text).summarize()
+    summarize = LlamaSummarize(text).summarize(summary_prompt)
     st.write(summarize)
