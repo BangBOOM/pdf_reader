@@ -12,7 +12,7 @@ class DocSummarize:
     text_splitter = CharacterTextSplitter()
 
     def __init__(self, text: str) -> None:
-        self.texts = self.text_splitter.split_text(text)[:5]
+        self.texts = self.text_splitter.split_text(text)
 
     def summarize(self):
         pass
