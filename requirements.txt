@@ -1,0 +1,9 @@
+pdfminer.six
+langchain
+openai
+chromadb
+tiktoken
+watchdog
+llama-index
+streamlit
+streamlit_chat

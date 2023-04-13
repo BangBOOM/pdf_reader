@@ -1,5 +1,8 @@
 from langchain import OpenAI
 from langchain.prompts import PromptTemplate
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.vectorstores import Chroma
+from langchain.chains import RetrievalQA
 from langchain.chains.summarize import load_summarize_chain
 from langchain.docstore.document import Document
 from langchain.text_splitter import CharacterTextSplitter
@@ -12,7 +15,7 @@ class DocSummarize:
     text_splitter = CharacterTextSplitter()
 
     def __init__(self, text: str) -> None:
-        self.texts = self.text_splitter.split_text(text)
+        self.texts = self.text_splitter.split_text(text)[:3]
 
     def summarize(self):
         pass
@@ -93,6 +96,24 @@ Finally give a few possible questions about the paper and provide answers."""
                                    response_mode="tree_summarize")
         return f"""Summary: {summary.response}"""
 
+
+class QuestionAnswer:
+    text_splitter = CharacterTextSplitter()
+    embeddings = OpenAIEmbeddings()
+    def __init__(self, text: str) -> None:
+        texts = self.text_splitter.split_text(text)[:3]
+        self.db = Chroma.from_documents(texts, self.embeddings)
+        
+    def query(self, chain_type, q, k):
+        retriever = self.db.as_retriever(search_type="similarity", search_kwargs={"k": k})
+        # create a chain to answer questions 
+        qa = RetrievalQA.from_chain_type(
+            llm=OpenAI(temperature=0), 
+            chain_type=chain_type, 
+            retriever=retriever, 
+            return_source_documents=True)
+        return qa({'query': q})["result"]
+        
 
 def main():
     text = extract_text("demo.pdf")
