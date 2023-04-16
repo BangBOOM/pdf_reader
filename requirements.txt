@@ -7,3 +7,4 @@ watchdog
 llama-index
 streamlit
 streamlit_chat
+gradio
