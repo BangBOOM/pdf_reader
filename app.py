@@ -52,7 +52,7 @@ def query_openai(query, system_context):
     completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         temperature=0.2,
-        message=[
+        messages=[
             {"role": "system", "content": system_context},
             {"role": "user", "content": query}
         ]
