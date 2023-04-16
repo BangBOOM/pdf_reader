@@ -107,12 +107,12 @@ class QuestionAnswer:
     def query(self, chain_type, q, k):
         retriever = self.db.as_retriever(search_type="similarity", search_kwargs={"k": k})
         # create a chain to answer questions 
-        qa = RetrievalQA.from_chain_type(
+        chain = RetrievalQA.from_chain_type(
             llm=OpenAI(temperature=0), 
             chain_type=chain_type, 
             retriever=retriever, 
             return_source_documents=True)
-        return qa({'query': q})["result"]
+        return chain({'question': q})
         
 
 def main():
